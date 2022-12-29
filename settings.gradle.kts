@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "ComposeGraphQLExample"
-include ':app'
-include ':feature:common'
-include ':feature:home'
+include(":app")
+include(":feature:common")
+include(":feature:home")
