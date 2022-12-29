@@ -22,6 +22,7 @@ dagger = "2.44.2"
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
+hilt-android-gradle-plugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 
 [libraries]
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
@@ -32,7 +33,6 @@ androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "and
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
 
-daggerHiltAndroidGradlePlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "dagger" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 
