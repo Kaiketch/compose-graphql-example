@@ -1,23 +1,18 @@
 plugins {
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.android.application)
 }
 
 android {
-    namespace 'com.example.composegraphqlexample'
+    namespace 'com.example.home'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.composegraphqlexample"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -33,21 +28,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.get()
-    }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
 }
 
 dependencies {
-    implementation(project(":feature:home"))
 
     implementation libs.bundles.compose
     implementation libs.androidx.core
