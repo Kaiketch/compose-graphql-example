@@ -1,4 +1,11 @@
 [versions]
+app-versionCode = "1"
+app-versionName = "1.0.0"
+
+android-compileSdk = "33"
+android-targetSdk = "33"
+android-minSdk = "24"
+
 kotlin = "1.7.10"
 android-gradle = "7.3.0"
 
