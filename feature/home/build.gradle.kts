@@ -1,3 +1,4 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("kotlin-kapt")
     alias(libs.plugins.kotlin)
