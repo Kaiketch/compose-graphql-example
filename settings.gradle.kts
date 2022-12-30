@@ -23,4 +23,5 @@ dependencyResolutionManagement {
 rootProject.name = "ComposeGraphQLExample"
 include(":app")
 include(":feature:common")
+include(":feature:main")
 include(":feature:home")
