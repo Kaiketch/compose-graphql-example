@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.home"
+    namespace = "com.example.setting"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     buildFeatures {
         compose = true
