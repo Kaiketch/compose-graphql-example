@@ -17,6 +17,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:common"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:setting"))
+
     implementation(libs.bundles.compose)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
