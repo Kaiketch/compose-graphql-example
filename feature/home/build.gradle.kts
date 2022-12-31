@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation(project(":feature:common"))
+    implementation(project(":data:graphql"))
 
     implementation(libs.bundles.compose)
     implementation(libs.androidx.core)
@@ -26,6 +27,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.viewmodel.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.apollo.runtime)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 }
