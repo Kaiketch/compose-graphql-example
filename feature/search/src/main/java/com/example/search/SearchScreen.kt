@@ -15,12 +15,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.R
 
 @Composable
 fun SearchScreen(
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel,
+    navigateToDetail: (owner: String, name: String) -> Unit,
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
 
@@ -47,6 +47,10 @@ fun SearchScreen(
                         text = item.name,
                         modifier = Modifier
                             .clickable {
+                                navigateToDetail(
+                                    item.owner.login,
+                                    item.name
+                                )
                             }
                             .padding(16.dp)
                             .fillMaxWidth()

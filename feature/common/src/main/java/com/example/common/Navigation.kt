@@ -19,5 +19,11 @@ sealed class Screen(
     val icon: ImageVector? = null
 ) {
     object Search : Screen("screen_search", R.string.nav_search, Icons.Filled.Search)
+    object Detail : Screen("screen_detail")
     object Setting : Screen("screen_setting", R.string.nav_setting, Icons.Filled.Settings)
+}
+
+object Param {
+    const val OWNER = "owner"
+    const val NAME = "name"
 }

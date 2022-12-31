@@ -1,9 +1,14 @@
 fragment repository on Repository {
     name
+    owner {
+        id
+        login
+    }
     description
     createdAt
     updatedAt
     url
+    stargazerCount
 }
 
 query Repositories($login: String!, $first: Int!) {
