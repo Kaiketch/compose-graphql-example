@@ -9,6 +9,7 @@ fragment repository on Repository {
     updatedAt
     url
     stargazerCount
+    viewerHasStarred
 }
 
 query Repositories($login: String!, $first: Int!) {

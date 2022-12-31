@@ -1,14 +1,16 @@
 package com.example.search
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,8 +45,7 @@ fun SearchScreen(
         repositories?.let {
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(it) { item ->
-                    Text(
-                        text = item.name,
+                    Row(
                         modifier = Modifier
                             .clickable {
                                 navigateToDetail(
@@ -54,7 +55,23 @@ fun SearchScreen(
                             }
                             .padding(16.dp)
                             .fillMaxWidth()
-                    )
+                    ) {
+                        Text(text = item.name)
+                        Spacer(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 16.dp)
+                        )
+                        Text(
+                            text = item.stargazerCount.toString()
+                        )
+                        Spacer(modifier = Modifier.padding(end = 16.dp))
+                        if (item.viewerHasStarred) {
+                            Icon(Icons.Default.Star, null)
+                        } else {
+                            Icon(Icons.Default.StarOutline, null)
+                        }
+                    }
                     Divider()
                 }
             }

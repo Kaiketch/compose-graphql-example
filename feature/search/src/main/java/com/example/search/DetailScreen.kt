@@ -1,12 +1,13 @@
 package com.example.search
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +39,27 @@ fun DetailScreen(
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(text = uiState.repository?.name.orEmpty())
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 16.dp)
+                )
+                Text(
+                    text = uiState.repository?.stargazerCount.toString()
+                )
+                Spacer(modifier = Modifier.padding(end = 16.dp))
+                if (uiState.repository?.viewerHasStarred == true) {
+                    Icon(Icons.Default.Star, null)
+                } else {
+                    Icon(Icons.Default.StarOutline, null)
+                }
+            }
             Text(
                 text = uiState.repository?.url.toString(),
                 modifier = Modifier.fillMaxWidth()
