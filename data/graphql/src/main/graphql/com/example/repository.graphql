@@ -8,6 +8,7 @@ fragment repository on Repository {
 
 query Repositories($login: String!, $first: Int!) {
     user(login: $login) {
+        login
         name
         repositories(first: $first) {
             totalCount
@@ -18,7 +19,12 @@ query Repositories($login: String!, $first: Int!) {
                 endCursor
             }
             nodes {
-              ...repository
+                ...repository
+            }
+            edges {
+                node {
+                    ...repository
+                }
             }
         }
     }
