@@ -16,7 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.common.Graph
 import com.example.common.Screen
-import com.example.home.homeGraph
+import com.example.search.searchGraph
 import com.example.setting.settingGraph
 
 @Composable
@@ -78,15 +78,15 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Graph.Home.route,
+        startDestination = Graph.Search.route,
         modifier = Modifier.padding(paddingValues),
     ) {
-        homeGraph(navController = navController)
+        searchGraph(navController = navController)
         settingGraph(navController = navController)
     }
 }
 
 val bottomNavItems = listOf(
-    Screen.Home,
+    Screen.Search,
     Screen.Setting,
 )

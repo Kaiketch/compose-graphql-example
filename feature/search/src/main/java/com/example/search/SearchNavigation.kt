@@ -1,4 +1,4 @@
-package com.example.home
+package com.example.search
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -8,11 +8,11 @@ import androidx.navigation.compose.navigation
 import com.example.common.Graph
 import com.example.common.Screen
 
-fun NavGraphBuilder.homeGraph(navController: NavHostController) {
-    navigation(startDestination = Screen.Home.route, route = Graph.Home.route) {
-        composable(Screen.Home.route) {
-            HomeScreen(
-                homeViewModel = hiltViewModel(),
+fun NavGraphBuilder.searchGraph(navController: NavHostController) {
+    navigation(startDestination = Screen.Search.route, route = Graph.Search.route) {
+        composable(Screen.Search.route) {
+            SearchScreen(
+                searchViewModel = hiltViewModel(),
             )
         }
     }

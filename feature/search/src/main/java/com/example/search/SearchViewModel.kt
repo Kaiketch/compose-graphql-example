@@ -1,4 +1,4 @@
-package com.example.home
+package com.example.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,16 +11,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val apolloClient: ApolloClient
 ) : ViewModel() {
 
-    data class HomeUiState(
+    data class SearchUiState(
         val viewer: ViewerQuery.Viewer? = null,
     )
 
-    private val _uiState = MutableStateFlow(HomeUiState())
-    val uiState: StateFlow<HomeUiState> = _uiState
+    private val _uiState = MutableStateFlow(SearchUiState())
+    val uiState: StateFlow<SearchUiState> = _uiState
 
     init {
         viewModelScope.launch {

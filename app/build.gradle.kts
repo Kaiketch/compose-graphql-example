@@ -55,7 +55,7 @@ android {
 dependencies {
     implementation(project(":feature:common"))
     implementation(project(":feature:main"))
-    implementation(project(":feature:home"))
+    implementation(project(":feature:search"))
     implementation(project(":feature:setting"))
 
     implementation(libs.bundles.compose)
