@@ -54,7 +54,7 @@ fun DetailScreen(
                 Text(
                     text = uiState.repository?.stargazerCount.toString()
                 )
-                Spacer(modifier = Modifier.padding(end = 16.dp))
+                Spacer(modifier = Modifier.size(16.dp))
                 if (uiState.repository?.viewerHasStarred == true) {
                     Icon(
                         Icons.Default.Star, null,
