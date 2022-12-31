@@ -1,5 +1,6 @@
 package com.example.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -55,9 +56,19 @@ fun DetailScreen(
                 )
                 Spacer(modifier = Modifier.padding(end = 16.dp))
                 if (uiState.repository?.viewerHasStarred == true) {
-                    Icon(Icons.Default.Star, null)
+                    Icon(
+                        Icons.Default.Star, null,
+                        modifier = Modifier.clickable {
+                            detailViewModel.onStarIconTapped()
+                        }
+                    )
                 } else {
-                    Icon(Icons.Default.StarOutline, null)
+                    Icon(
+                        Icons.Default.StarOutline, null,
+                        modifier = Modifier.clickable {
+                            detailViewModel.onStarIconTapped()
+                        }
+                    )
                 }
             }
             Text(
