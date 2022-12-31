@@ -8,7 +8,8 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             when (requested.id.id) {
-                "hilt.android.gradle.plugin" -> useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
+                "hilt.android" -> useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
+                "apollo" -> useModule("com.apollographql.apollo3:apollo-gradle-plugin:${requested.version}")
             }
         }
     }

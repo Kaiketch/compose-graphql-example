@@ -3,6 +3,7 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.kotlin)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.apollo)
 }
 
 android {
@@ -16,7 +17,13 @@ android {
     }
 }
 
+apollo {
+    packageName.set("com.example")
+}
+
 dependencies {
+    implementation(libs.apollo.runtime)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 }

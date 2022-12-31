@@ -3,7 +3,7 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.kotlin)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.hilt.android.gradle.plugin)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
