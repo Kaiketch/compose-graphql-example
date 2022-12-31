@@ -1,0 +1,31 @@
+fragment repository on Repository {
+    name
+    description
+    createdAt
+    updatedAt
+    url
+}
+
+query Repositories($login: String!, $first: Int!) {
+    user(login: $login) {
+        name
+        repositories(first: $first) {
+            totalCount
+            pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+            }
+            nodes {
+              ...repository
+            }
+        }
+    }
+}
+
+query Repository($owner: String!, $name: String!) {
+    repository(owner: $owner, name: $name) {
+        ...repository
+    }
+}
