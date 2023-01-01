@@ -19,6 +19,7 @@ android {
 dependencies {
     implementation(project(":feature:common"))
     implementation(project(":data:graphql"))
+    implementation(project(":data:datastore"))
 
     implementation(libs.bundles.compose)
     implementation(libs.androidx.core)

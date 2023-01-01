@@ -5,15 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.ApolloClient
 import com.example.RepositoriesQuery
 import com.example.ViewerQuery
+import com.example.datastore.SettingDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val settingDataStore: SettingDataStore
 ) : ViewModel() {
 
     data class SearchUiState(
@@ -29,7 +32,8 @@ class SearchViewModel @Inject constructor(
                 apolloClient.query(ViewerQuery()).execute().data?.viewer
                     ?: throw IllegalStateException()
             }.mapCatching {
-                apolloClient.query(RepositoriesQuery(it.login, 20)).execute().data?.user
+                val limit = settingDataStore.getRequestLimit().first()
+                apolloClient.query(RepositoriesQuery(it.login, limit)).execute().data?.user
                     ?: throw IllegalStateException()
             }.onSuccess {
                 _uiState.value = _uiState.value.copy(
