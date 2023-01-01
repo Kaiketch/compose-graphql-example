@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.common.R
+import com.example.datastore.RequestLimit
 
 @Composable
 fun SettingScreen(
@@ -48,7 +49,7 @@ fun SettingScreen(
                         .padding(end = 16.dp)
                 )
                 Text(
-                    text = "20"
+                    text = uiState.limit.toString()
                 )
             }
         }
@@ -57,29 +58,19 @@ fun SettingScreen(
     if (isShowLimitDialog) {
         Dialog(onDismissRequest = { isShowLimitDialog = false }) {
             Surface {
-                Column(Modifier.padding(24.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "5")
-                        Spacer(modifier = Modifier.weight(1f))
-                        RadioButton(selected = true, onClick = { /*TODO*/ })
-                    }
-                    Spacer(modifier = Modifier.size(16.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "10")
-                        Spacer(modifier = Modifier.weight(1f))
-                        RadioButton(selected = true, onClick = { /*TODO*/ })
-                    }
-                    Spacer(modifier = Modifier.size(16.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "20")
-                        Spacer(modifier = Modifier.weight(1f))
-                        RadioButton(selected = true, onClick = { /*TODO*/ })
-                    }
-                    Spacer(modifier = Modifier.size(16.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "50")
-                        Spacer(modifier = Modifier.weight(1f))
-                        RadioButton(selected = true, onClick = { /*TODO*/ })
+                Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    RequestLimit.values().forEach {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = it.limit.toString())
+                            Spacer(modifier = Modifier.weight(1f))
+                            RadioButton(
+                                selected = it.limit == uiState.limit,
+                                onClick = {
+                                    settingViewModel.onLimitSelected(it.limit)
+                                    isShowLimitDialog = false
+                                }
+                            )
+                        }
                     }
                 }
             }
