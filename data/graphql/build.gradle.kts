@@ -30,7 +30,7 @@ apollo {
 }
 
 dependencies {
-    implementation(libs.apollo.runtime)
+    implementation(libs.bundles.apollo)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
