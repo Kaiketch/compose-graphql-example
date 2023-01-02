@@ -3,6 +3,7 @@ package com.example.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.watch
 import com.example.RepositoriesQuery
 import com.example.ViewerQuery
 import com.example.datastore.SettingDataStore
@@ -31,14 +32,13 @@ class SearchViewModel @Inject constructor(
             runCatching {
                 apolloClient.query(ViewerQuery()).execute().data?.viewer
                     ?: throw IllegalStateException()
-            }.mapCatching {
-                val limit = settingDataStore.getRequestLimit().first()
-                apolloClient.query(RepositoriesQuery(it.login, limit)).execute().data?.user
-                    ?: throw IllegalStateException()
             }.onSuccess {
-                _uiState.value = _uiState.value.copy(
-                    user = it,
-                )
+                val limit = settingDataStore.getRequestLimit().first()
+                apolloClient.query(RepositoriesQuery(it.login, limit)).watch().collect { response ->
+                    _uiState.value = _uiState.value.copy(
+                        user = response.data?.user,
+                    )
+                }
             }.onFailure {
 
             }

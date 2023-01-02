@@ -28,7 +28,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.viewmodel.compose)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.apollo.runtime)
+
+    implementation(libs.bundles.apollo)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 }

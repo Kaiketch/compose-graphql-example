@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.example.AddStarMutation
 import com.example.RemoveStarMutation
 import com.example.RepositoryQuery
@@ -34,10 +36,26 @@ class DetailViewModel @Inject constructor(
     val uiState: StateFlow<DetailUiState> = _uiState
 
     init {
+        fetchRepository()
+    }
+
+    fun onStarIconTapped() {
+        val id = _uiState.value.repository?.id ?: throw IllegalStateException()
+        if (_uiState.value.repository?.viewerHasStarred == true) {
+            removeStar(id)
+        } else {
+            addStar(id)
+        }
+    }
+
+    private fun fetchRepository(
+        fetchPolicy: FetchPolicy? = null
+    ) {
         if (owner != null && name != null) {
             viewModelScope.launch {
                 runCatching {
                     apolloClient.query(RepositoryQuery(owner, name))
+                        .apply { fetchPolicy?.let { fetchPolicy(it) }}
                         .execute().data?.repository?.repository
                         ?: throw IllegalStateException()
                 }.onSuccess {
@@ -48,15 +66,6 @@ class DetailViewModel @Inject constructor(
 
                 }
             }
-        }
-    }
-
-    fun onStarIconTapped() {
-        val id = _uiState.value.repository?.id ?: throw IllegalStateException()
-        if (_uiState.value.repository?.viewerHasStarred == true) {
-            removeStar(id)
-        } else {
-            addStar(id)
         }
     }
 
@@ -74,6 +83,7 @@ class DetailViewModel @Inject constructor(
                         viewerHasStarred = it.viewerHasStarred,
                     ),
                 )
+                fetchRepository(FetchPolicy.NetworkOnly)
             }.onFailure {
 
             }
@@ -94,6 +104,7 @@ class DetailViewModel @Inject constructor(
                         viewerHasStarred = it.viewerHasStarred,
                     ),
                 )
+                fetchRepository(FetchPolicy.NetworkOnly)
             }.onFailure {
 
             }
