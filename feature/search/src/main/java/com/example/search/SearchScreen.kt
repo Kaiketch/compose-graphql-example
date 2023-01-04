@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,8 @@ fun SearchScreen(
     navigateToDetail: (owner: String, name: String) -> Unit,
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
+    val user = searchUiState.result?.data?.user
+    val isLoading = searchUiState.result?.isLoading ?: false
 
     Scaffold(
         topBar = {
@@ -30,15 +33,14 @@ fun SearchScreen(
                     Text(
                         text = stringResource(
                             id = R.string.title_search,
-                            searchUiState.user?.name.orEmpty()
+                            user?.name.orEmpty()
                         ),
                     )
                 }
             )
         }
     ) { paddingValues ->
-        val repositories =
-            searchUiState.user?.repositories?.nodes?.map { node -> node?.repository!! }
+        val repositories = user?.repositories?.nodes?.map { node -> node?.repository!! }
         repositories?.let {
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(it) { item ->
@@ -67,6 +69,12 @@ fun SearchScreen(
                     }
                     Divider()
                 }
+            }
+        }
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }

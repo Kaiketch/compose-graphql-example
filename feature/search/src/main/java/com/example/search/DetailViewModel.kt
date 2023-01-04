@@ -14,8 +14,7 @@ import com.example.fragment.Repository
 import com.example.type.AddStarInput
 import com.example.type.RemoveStarInput
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,20 +51,16 @@ class DetailViewModel @Inject constructor(
         fetchPolicy: FetchPolicy? = null
     ) {
         if (owner != null && name != null) {
-            viewModelScope.launch {
-                runCatching {
-                    apolloClient.query(RepositoryQuery(owner, name))
-                        .apply { fetchPolicy?.let { fetchPolicy(it) }}
-                        .execute().data?.repository?.repository
-                        ?: throw IllegalStateException()
-                }.onSuccess {
-                    _uiState.value = _uiState.value.copy(
-                        repository = it,
-                    )
-                }.onFailure {
-
-                }
-            }
+            apolloClient.query(RepositoryQuery(owner, name))
+                .apply {
+                    fetchPolicy?.let { fetchPolicy(it) }
+                }.toFlow()
+                .onEach { response ->
+                    val repo =
+                        response.data?.repository?.repository ?: throw IllegalStateException()
+                    _uiState.value = _uiState.value.copy(repository = repo)
+                }.catch {
+                }.launchIn(viewModelScope)
         }
     }
 

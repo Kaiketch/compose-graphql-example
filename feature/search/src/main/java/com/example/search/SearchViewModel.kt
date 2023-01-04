@@ -7,10 +7,9 @@ import com.apollographql.apollo3.cache.normalized.watch
 import com.example.RepositoriesQuery
 import com.example.ViewerQuery
 import com.example.datastore.SettingDataStore
+import com.example.graphql.ApolloResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +20,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     data class SearchUiState(
-        val user: RepositoriesQuery.User? = null,
+        val result: ApolloResult<RepositoriesQuery.Data>? = null,
     )
 
     private val _uiState = MutableStateFlow(SearchUiState())
@@ -34,10 +33,17 @@ class SearchViewModel @Inject constructor(
                     ?: throw IllegalStateException()
             }.onSuccess {
                 val limit = settingDataStore.getRequestLimit().first()
-                apolloClient.query(RepositoriesQuery(it.login, limit)).watch().collect { response ->
-                    _uiState.value = _uiState.value.copy(
-                        user = response.data?.user,
+                flow {
+                    emit(ApolloResult.startLoading())
+                    emitAll(
+                        apolloClient.query(RepositoriesQuery(it.login, limit)).watch().map {
+                            ApolloResult.success(response = it)
+                        }.catch {
+                            emit(ApolloResult.error())
+                        }
                     )
+                }.collect { result ->
+                    _uiState.value = _uiState.value.copy(result = result)
                 }
             }.onFailure {
 
