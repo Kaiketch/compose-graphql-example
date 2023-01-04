@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
@@ -13,9 +14,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.common.R
+
 
 @Composable
 fun SearchScreen(
@@ -29,16 +29,27 @@ fun SearchScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp),
                 title = {
-                    Text(
-                        text = stringResource(
-                            id = R.string.title_search,
-                            user?.name.orEmpty()
-                        ),
+                    OutlinedTextField(
+                        value = searchUiState.keyword,
+                        onValueChange = { searchViewModel.onKeywordChanged(it) },
+                        modifier = Modifier.padding(8.dp)
                     )
+                },
+                actions = {
+                    IconButton(onClick = { searchViewModel.onSearchClicked() }) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                        )
+                    }
                 }
             )
-        }
+        },
     ) { paddingValues ->
         val repositories = user?.repositories?.nodes?.map { node -> node?.repository!! }
         repositories?.let {
