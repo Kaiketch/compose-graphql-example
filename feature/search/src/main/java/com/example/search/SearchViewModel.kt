@@ -3,39 +3,48 @@ package com.example.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.watch
-import com.example.RepositoriesQuery
-import com.example.ViewerQuery
 import com.example.datastore.SettingDataStore
 import com.example.graphql.ApolloResult
+import com.example.graphql.RepositoriesQuery
+import com.example.graphql.ViewerQuery
+import com.example.repository.GitRepoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val apolloClient: ApolloClient,
-    private val settingDataStore: SettingDataStore
+    private val gitRepoRepository: GitRepoRepository,
+    private val settingDataStore: SettingDataStore,
 ) : ViewModel() {
 
     data class SearchUiState(
         val keyword: String = "",
+        val limit: Int = 0,
         val result: ApolloResult<RepositoriesQuery.Data>? = null,
     )
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState
 
-    init {
+    fun onResume() {
         viewModelScope.launch {
-            val login = apolloClient.query(ViewerQuery()).toFlow().first().data?.viewer?.login
-                ?: return@launch
-            _uiState.value = _uiState.value.copy(keyword = login)
-
             val limit = settingDataStore.getRequestLimit().first()
-            fetchRepositories(login, limit).collect { result ->
-                _uiState.value = _uiState.value.copy(result = result)
+            if (_uiState.value.limit != limit) {
+                val login = if (_uiState.value.keyword.isNullOrEmpty()) {
+                    apolloClient.query(ViewerQuery()).toFlow().first().data?.viewer?.login
+                } else {
+                    _uiState.value.keyword
+                } ?: return@launch
+
+                gitRepoRepository.fetchRepositories(login, limit).collect { result ->
+                    _uiState.value =
+                        _uiState.value.copy(result = result, keyword = login, limit = limit)
+                }
             }
         }
     }
@@ -48,25 +57,9 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val login = _uiState.value.keyword
             val limit = settingDataStore.getRequestLimit().first()
-            fetchRepositories(login, limit).collect { result ->
+            gitRepoRepository.fetchRepositories(login, limit).collect { result ->
                 _uiState.value = _uiState.value.copy(result = result)
             }
-        }
-    }
-
-    private fun fetchRepositories(
-        keyword: String,
-        limit: Int
-    ): Flow<ApolloResult<RepositoriesQuery.Data>> {
-        return flow {
-            emit(ApolloResult.startLoading())
-            emitAll(
-                apolloClient.query(RepositoriesQuery(keyword, limit)).watch().map {
-                    ApolloResult.success(response = it)
-                }.catch {
-                    emit(ApolloResult.error())
-                }
-            )
         }
     }
 }

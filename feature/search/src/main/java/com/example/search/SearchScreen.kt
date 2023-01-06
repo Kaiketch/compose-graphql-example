@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,6 +26,10 @@ fun SearchScreen(
     val searchUiState by searchViewModel.uiState.collectAsState()
     val user = searchUiState.result?.data?.user
     val isLoading = searchUiState.result?.isLoading ?: false
+
+    LaunchedEffect(searchViewModel) {
+        searchViewModel.onResume()
+    }
 
     Scaffold(
         topBar = {
