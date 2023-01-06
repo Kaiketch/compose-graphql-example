@@ -2,11 +2,11 @@ package com.example.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.datastore.SettingDataStore
 import com.example.graphql.ApolloResult
 import com.example.graphql.RepositoriesQuery
 import com.example.graphql.ViewerQuery
 import com.example.repository.GitRepoRepository
+import com.example.repository.SettingRepository
 import com.example.repository.ViewerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val viewerRepository: ViewerRepository,
     private val gitRepoRepository: GitRepoRepository,
-    private val settingDataStore: SettingDataStore,
+    private val settingRepository: SettingRepository,
 ) : ViewModel() {
 
     data class SearchUiState(
@@ -34,7 +34,7 @@ class SearchViewModel @Inject constructor(
 
     fun onResume() {
         viewModelScope.launch {
-            val limit = settingDataStore.getRequestLimit().first()
+            val limit = settingRepository.fetchRequestLimit().first()
             if (_uiState.value.limit != limit) {
                 if (_uiState.value.keyword.isEmpty()) {
                     viewerRepository.fetchViewer().collect { viewerResult ->
@@ -63,7 +63,7 @@ class SearchViewModel @Inject constructor(
     fun onSearchClicked() {
         viewModelScope.launch {
             val login = _uiState.value.keyword
-            val limit = settingDataStore.getRequestLimit().first()
+            val limit = settingRepository.fetchRequestLimit().first()
             gitRepoRepository.fetchRepositories(login, limit).collect { result ->
                 _uiState.value = _uiState.value.copy(result = result)
             }
