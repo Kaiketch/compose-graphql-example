@@ -25,7 +25,8 @@ fun SearchScreen(
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
     val user = searchUiState.result?.data?.user
-    val isLoading = searchUiState.result?.isLoading ?: false
+    val isLoading =
+        searchUiState.result?.isLoading ?: false || searchUiState.viewerResult?.isLoading ?: false
 
     LaunchedEffect(searchViewModel) {
         searchViewModel.onResume()

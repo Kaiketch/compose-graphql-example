@@ -2,12 +2,12 @@ package com.example.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.ApolloClient
 import com.example.datastore.SettingDataStore
 import com.example.graphql.ApolloResult
 import com.example.graphql.RepositoriesQuery
 import com.example.graphql.ViewerQuery
 import com.example.repository.GitRepoRepository
+import com.example.repository.ViewerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val apolloClient: ApolloClient,
+    private val viewerRepository: ViewerRepository,
     private val gitRepoRepository: GitRepoRepository,
     private val settingDataStore: SettingDataStore,
 ) : ViewModel() {
@@ -25,6 +25,7 @@ class SearchViewModel @Inject constructor(
     data class SearchUiState(
         val keyword: String = "",
         val limit: Int = 0,
+        val viewerResult: ApolloResult<ViewerQuery.Data>? = null,
         val result: ApolloResult<RepositoriesQuery.Data>? = null,
     )
 
@@ -35,15 +36,21 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val limit = settingDataStore.getRequestLimit().first()
             if (_uiState.value.limit != limit) {
-                val login = if (_uiState.value.keyword.isNullOrEmpty()) {
-                    apolloClient.query(ViewerQuery()).toFlow().first().data?.viewer?.login
+                if (_uiState.value.keyword.isEmpty()) {
+                    viewerRepository.fetchViewer().collect { viewerResult ->
+                        val login = viewerResult.data?.viewer?.login ?: return@collect
+                        _uiState.value =
+                            _uiState.value.copy(viewerResult = viewerResult, keyword = login)
+                        gitRepoRepository.fetchRepositories(login, limit)
+                            .collect { result ->
+                                _uiState.value = _uiState.value.copy(result = result, limit = limit)
+                            }
+                    }
                 } else {
-                    _uiState.value.keyword
-                } ?: return@launch
-
-                gitRepoRepository.fetchRepositories(login, limit).collect { result ->
-                    _uiState.value =
-                        _uiState.value.copy(result = result, keyword = login, limit = limit)
+                    gitRepoRepository.fetchRepositories(_uiState.value.keyword, limit)
+                        .collect { result ->
+                            _uiState.value = _uiState.value.copy(result = result, limit = limit)
+                        }
                 }
             }
         }
