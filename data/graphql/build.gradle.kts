@@ -26,11 +26,11 @@ android {
 }
 
 apollo {
-    packageName.set("com.example")
+    packageName.set("com.example.graphql")
 }
 
 dependencies {
-    implementation(libs.bundles.apollo)
+    api(libs.bundles.apollo)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

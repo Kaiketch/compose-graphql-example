@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation(project(":feature:common"))
+    implementation(project(":data:repository"))
     implementation(project(":data:datastore"))
 
     implementation(libs.bundles.compose)

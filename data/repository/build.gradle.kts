@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("kotlin-kapt")
@@ -13,9 +11,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":data:graphql"))
-    
-    implementation(libs.bundles.apollo)
+    api(project(":data:graphql"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
