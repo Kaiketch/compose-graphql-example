@@ -2,16 +2,14 @@ package com.example.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -21,7 +19,11 @@ import com.example.common.R
 fun DetailScreen(
     detailViewModel: DetailViewModel,
 ) {
-    val uiState by detailViewModel.uiState.collectAsState()
+    val detailUiState by detailViewModel.uiState.collectAsState()
+    val repository = detailUiState.result?.data?.repository?.repository
+    val isLoading = detailUiState.result?.isLoading ?: false
+            || detailUiState.addStarResult?.isLoading ?: false
+            || detailUiState.removeStarResult?.isLoading ?: false
 
     Scaffold(
         topBar = {
@@ -30,7 +32,7 @@ fun DetailScreen(
                     Text(
                         text = stringResource(
                             id = R.string.title_detail,
-                            uiState.repository?.name.orEmpty()
+                            repository?.name.orEmpty()
                         ),
                     )
                 }
@@ -45,17 +47,17 @@ fun DetailScreen(
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                Text(text = uiState.repository?.name.orEmpty())
+                Text(text = repository?.name.orEmpty())
                 Spacer(
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 16.dp)
                 )
                 Text(
-                    text = uiState.repository?.stargazerCount.toString()
+                    text = repository?.stargazerCount.toString()
                 )
                 Spacer(modifier = Modifier.size(16.dp))
-                if (uiState.repository?.viewerHasStarred == true) {
+                if (repository?.viewerHasStarred == true) {
                     Icon(
                         Icons.Default.Star, null,
                         modifier = Modifier.clickable {
@@ -72,9 +74,15 @@ fun DetailScreen(
                 }
             }
             Text(
-                text = uiState.repository?.url.toString(),
+                text = repository?.url.toString(),
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
         }
     }
 }
