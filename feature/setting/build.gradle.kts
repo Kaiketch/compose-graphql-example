@@ -18,8 +18,8 @@ android {
 
 dependencies {
     implementation(project(":feature:common"))
-    implementation(project(":data:repository"))
-    implementation(project(":data:datastore"))
+    implementation(project(":core:repository"))
+    implementation(project(":core:datastore"))
 
     implementation(libs.bundles.compose)
     implementation(libs.androidx.core)

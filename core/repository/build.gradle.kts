@@ -11,8 +11,8 @@ android {
 }
 
 dependencies {
-    api(project(":data:graphql"))
-    implementation(project(":data:datastore"))
+    api(project(":core:graphql"))
+    implementation(project(":core:datastore"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
