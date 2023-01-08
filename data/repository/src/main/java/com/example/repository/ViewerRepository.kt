@@ -23,7 +23,7 @@ class ViewerRepository @Inject constructor(
                     .apply { fetchPolicy(fetchPolicy) }.watch().map {
                     ApolloResult.success(response = it)
                 }.catch {
-                    emit(ApolloResult.error())
+                    emit(ApolloResult.error(it))
                 }
             )
         }

@@ -25,7 +25,7 @@ class GitRepoRepository @Inject constructor(
                     .apply { fetchPolicy(fetchPolicy) }.watch().map {
                         ApolloResult.success(response = it)
                     }.catch {
-                        emit(ApolloResult.error())
+                        emit(ApolloResult.error(it))
                     }
             )
         }
@@ -43,7 +43,7 @@ class GitRepoRepository @Inject constructor(
                     .apply { fetchPolicy(fetchPolicy) }.watch().map {
                         ApolloResult.success(response = it)
                     }.catch {
-                        emit(ApolloResult.error())
+                        emit(ApolloResult.error(it))
                     }
             )
         }
@@ -61,7 +61,7 @@ class GitRepoRepository @Inject constructor(
                     .fetchPolicy(FetchPolicy.NetworkOnly).toFlow().map {
                         ApolloResult.success(response = it)
                     }.catch {
-                        emit(ApolloResult.error())
+                        emit(ApolloResult.error(it))
                     }
             )
         }
@@ -76,7 +76,7 @@ class GitRepoRepository @Inject constructor(
                     .toFlow().map {
                         ApolloMutationResult.success(response = it)
                     }.catch {
-                        emit(ApolloMutationResult.error())
+                        emit(ApolloMutationResult.error(it))
                     }
             )
         }
@@ -91,7 +91,7 @@ class GitRepoRepository @Inject constructor(
                     .toFlow().map {
                         ApolloMutationResult.success(response = it)
                     }.catch {
-                        emit(ApolloMutationResult.error())
+                        emit(ApolloMutationResult.error(it))
                     }
             )
         }
