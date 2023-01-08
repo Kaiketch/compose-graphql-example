@@ -21,8 +21,9 @@ class SettingDataStore @Inject constructor(
         name = SETTING
     )
 
-    suspend fun saveRequestLimit(limit: Int) {
+    suspend fun saveRequestLimit(limit: Int): Int {
         context.dataStore.edit { it[REQUEST_LIMIT] = limit }
+        return limit
     }
 
     fun getRequestLimit(): Flow<Int> {

@@ -29,16 +29,6 @@ data class ApolloResult<T : Query.Data>(
         }
 
         fun <T : Query.Data> error(
-            response: ApolloResponse<T>,
-        ): ApolloResult<T> {
-            return ApolloResult(
-                data = null,
-                isLoading = false,
-                errors = response.errors?.map { Exception(it.message) },
-            )
-        }
-
-        fun <T : Query.Data> error(
             cause: Throwable,
         ): ApolloResult<T> {
             return ApolloResult(
@@ -69,16 +59,6 @@ data class ApolloMutationResult<T : Mutation.Data>(
         ): ApolloMutationResult<T> {
             return ApolloMutationResult(
                 data = response.data,
-                isLoading = false,
-                errors = response.errors?.map { Exception(it.message) },
-            )
-        }
-
-        fun <T : Mutation.Data> error(
-            response: ApolloResponse<T>,
-        ): ApolloMutationResult<T> {
-            return ApolloMutationResult(
-                data = null,
                 isLoading = false,
                 errors = response.errors?.map { Exception(it.message) },
             )

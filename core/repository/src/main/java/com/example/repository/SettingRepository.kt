@@ -1,7 +1,8 @@
 package com.example.repository
 
 import com.example.datastore.SettingDataStore
-import kotlinx.coroutines.flow.Flow
+import com.example.model.Result
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,11 +10,29 @@ import javax.inject.Singleton
 class SettingRepository @Inject constructor(
     private val settingDataStore: SettingDataStore,
 ) {
-    fun fetchRequestLimit(): Flow<Int> {
-        return settingDataStore.getRequestLimit()
+    fun fetchRequestLimit(): Flow<Result<Int>> {
+        return flow {
+            emit(Result.startLoading())
+            emitAll(
+                settingDataStore.getRequestLimit().map {
+                    Result.success(it)
+                }.catch {
+                    Result.error<Any>(it)
+                }
+            )
+        }
     }
 
-    suspend fun editRequestLimit(limit: Int) {
-        settingDataStore.saveRequestLimit(limit)
+    fun editRequestLimit(limit: Int): Flow<Result<Int>> {
+        return flow {
+            emit(Result.startLoading())
+            runCatching {
+                settingDataStore.saveRequestLimit(limit)
+            }.onSuccess {
+                emit(Result.success(it))
+            }.onFailure {
+                emit(Result.error(it))
+            }
+        }
     }
 }

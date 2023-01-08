@@ -49,7 +49,7 @@ fun SettingScreen(
                         .padding(end = 16.dp)
                 )
                 Text(
-                    text = uiState.limit.toString()
+                    text = uiState.result.toString()
                 )
             }
         }
@@ -64,7 +64,7 @@ fun SettingScreen(
                             Text(text = it.limit.toString())
                             Spacer(modifier = Modifier.weight(1f))
                             RadioButton(
-                                selected = it.limit == uiState.limit,
+                                selected = it.limit == uiState.result?.data,
                                 onClick = {
                                     settingViewModel.onLimitSelected(it.limit)
                                     isShowLimitDialog = false
