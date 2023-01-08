@@ -26,7 +26,7 @@ class SearchViewModel @Inject constructor(
         val keyword: String = "",
         val viewerResult: ApolloResult<ViewerQuery.Data>? = null,
         val result: ApolloResult<RepositoriesQuery.Data>? = null,
-        val limitResult: Result<Int>? = null,
+        val settingResult: Result<Int>? = null,
     )
 
     private val _uiState = MutableStateFlow(SearchUiState())
@@ -35,8 +35,13 @@ class SearchViewModel @Inject constructor(
     fun onResume() {
         viewModelScope.launch {
             settingRepository.fetchRequestLimit().collect { limitResult ->
+                if (limitResult.errors != null) {
+                    _uiState.value = _uiState.value.copy(settingResult = limitResult)
+                    return@collect
+                }
+
                 val limit = limitResult.data ?: return@collect
-                if (_uiState.value.limitResult?.data != limit) {
+                if (_uiState.value.settingResult?.data != limit) {
                     if (_uiState.value.keyword.isEmpty()) {
                         viewerRepository.fetchViewer().collect { viewerResult ->
                             val login = viewerResult.data?.viewer?.login ?: return@collect
@@ -47,7 +52,7 @@ class SearchViewModel @Inject constructor(
                                     _uiState.value =
                                         _uiState.value.copy(
                                             result = result,
-                                            limitResult = limitResult
+                                            settingResult = limitResult
                                         )
                                 }
                         }
@@ -55,7 +60,10 @@ class SearchViewModel @Inject constructor(
                         gitRepoRepository.watchRepositories(_uiState.value.keyword, limit)
                             .collect { result ->
                                 _uiState.value =
-                                    _uiState.value.copy(result = result, limitResult = limitResult)
+                                    _uiState.value.copy(
+                                        result = result,
+                                        settingResult = limitResult
+                                    )
                             }
                     }
                 }
@@ -69,9 +77,14 @@ class SearchViewModel @Inject constructor(
 
     fun onSearchClicked() {
         viewModelScope.launch {
-            val login = _uiState.value.keyword
             settingRepository.fetchRequestLimit().collect { limitResult ->
+                if (limitResult.errors != null) {
+                    _uiState.value = _uiState.value.copy(settingResult = limitResult)
+                    return@collect
+                }
+
                 val limit = limitResult.data ?: return@collect
+                val login = _uiState.value.keyword
                 gitRepoRepository.watchRepositories(login, limit).collect { result ->
                     _uiState.value = _uiState.value.copy(result = result)
                 }

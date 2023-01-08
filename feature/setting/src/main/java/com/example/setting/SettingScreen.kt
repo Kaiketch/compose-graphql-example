@@ -49,7 +49,7 @@ fun SettingScreen(
                         .padding(end = 16.dp)
                 )
                 Text(
-                    text = uiState.result.toString()
+                    text = uiState.result?.data?.toString().orEmpty()
                 )
             }
         }
