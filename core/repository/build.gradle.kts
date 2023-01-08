@@ -12,6 +12,7 @@ android {
 
 dependencies {
     api(project(":core:graphql"))
+    implementation(project(":core:model"))
     implementation(project(":core:datastore"))
 
     implementation(libs.hilt.android)

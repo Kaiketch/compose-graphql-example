@@ -7,7 +7,9 @@ import com.example.graphql.ViewerQuery
 import com.example.graphql.watchAsFlow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ViewerRepository @Inject constructor(
     private val apolloClient: ApolloClient,
 ) {

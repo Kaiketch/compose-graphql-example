@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.common.R
-import com.example.datastore.RequestLimit
+import com.example.model.RequestLimit
 
 @Composable
 fun SettingScreen(

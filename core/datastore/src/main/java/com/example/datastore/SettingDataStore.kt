@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.model.RequestLimit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -34,12 +35,4 @@ class SettingDataStore @Inject constructor(
         const val SETTING = "setting"
         val REQUEST_LIMIT = intPreferencesKey("request_limit")
     }
-}
-
-// TODO Domain層を作る場合は移動
-enum class RequestLimit(val limit: Int) {
-    FIVE(5),
-    TEN(10),
-    TWENTY(20),
-    FIFTY(50)
 }

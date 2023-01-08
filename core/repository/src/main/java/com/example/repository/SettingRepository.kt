@@ -1,16 +1,11 @@
 package com.example.repository
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import com.example.datastore.SettingDataStore
-import com.example.graphql.ApolloResult
-import com.example.graphql.RepositoriesQuery
-import com.example.graphql.ViewerQuery
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SettingRepository @Inject constructor(
     private val settingDataStore: SettingDataStore,
 ) {

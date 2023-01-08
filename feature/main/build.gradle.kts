@@ -17,6 +17,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
     implementation(project(":feature:common"))
     implementation(project(":feature:search"))
     implementation(project(":feature:setting"))

@@ -17,6 +17,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
     implementation(libs.bundles.compose)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)

@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation(project(":feature:common"))
+    implementation(project(":core:model"))
     implementation(project(":core:repository"))
 
     implementation(libs.bundles.compose)

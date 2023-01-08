@@ -7,7 +7,9 @@ import com.example.graphql.type.AddStarInput
 import com.example.graphql.type.RemoveStarInput
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GitRepoRepository @Inject constructor(
     private val apolloClient: ApolloClient,
 ) {
