@@ -18,7 +18,7 @@ fun <T : Query.Data> ApolloClient.watchAsFlow(
         emitAll(
             query(query).apply { fetchPolicy?.let { fetchPolicy(it) } }
                 .watch().map {
-                    ApolloResult.success(response = it)
+                    ApolloResult.create(response = it)
                 }.catch {
                     emit(ApolloResult.error(it))
                 }
@@ -35,7 +35,7 @@ fun <T : Query.Data> ApolloClient.queryAsFlow(
         emitAll(
             query(query).apply { fetchPolicy?.let { fetchPolicy(it) } }
                 .toFlow().map {
-                    ApolloResult.success(response = it)
+                    ApolloResult.create(response = it)
                 }.catch {
                     emit(ApolloResult.error(it))
                 }
@@ -51,7 +51,7 @@ fun <T : Mutation.Data> ApolloClient.mutationAsFlow(
         emitAll(
             mutation(mutation)
                 .toFlow().map {
-                    ApolloMutationResult.success(response = it)
+                    ApolloMutationResult.create(response = it)
                 }.catch {
                     emit(ApolloMutationResult.error(it))
                 }
@@ -73,13 +73,13 @@ data class ApolloResult<T : Query.Data>(
             )
         }
 
-        fun <T : Query.Data> success(
+        fun <T : Query.Data> create(
             response: ApolloResponse<T>
         ): ApolloResult<T> {
             return ApolloResult(
                 data = response.data,
                 isLoading = false,
-                errors = null,
+                errors = response.errors?.map { Exception(it.message) },
             )
         }
 
@@ -119,13 +119,13 @@ data class ApolloMutationResult<T : Mutation.Data>(
             )
         }
 
-        fun <T : Mutation.Data> success(
+        fun <T : Mutation.Data> create(
             response: ApolloResponse<T>
         ): ApolloMutationResult<T> {
             return ApolloMutationResult(
                 data = response.data,
                 isLoading = false,
-                errors = null,
+                errors = response.errors?.map { Exception(it.message) },
             )
         }
 

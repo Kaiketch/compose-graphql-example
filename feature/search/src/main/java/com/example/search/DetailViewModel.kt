@@ -35,7 +35,6 @@ class DetailViewModel @Inject constructor(
             gitRepoRepository.watchRepository(owner, name)
                 .onEach { result ->
                     _uiState.value = _uiState.value.copy(result = result)
-                }.catch {
                 }.launchIn(viewModelScope)
         }
     }

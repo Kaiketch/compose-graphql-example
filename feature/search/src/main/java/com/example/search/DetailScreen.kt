@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.common.R
+import com.example.common.component.ErrorDialog
 import com.example.common.component.ProgressView
 
 @Composable
@@ -27,6 +28,8 @@ fun DetailScreen(
     val isLoading = detailUiState.result?.isLoading ?: false
             || detailUiState.addStarResult?.isLoading ?: false
             || detailUiState.removeStarResult?.isLoading ?: false
+    val errors = detailUiState.result?.errors ?: detailUiState.addStarResult?.errors
+    ?: detailUiState.removeStarResult?.errors
 
     Scaffold(
         topBar = {
@@ -80,6 +83,10 @@ fun DetailScreen(
                 text = repository?.url.toString(),
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+
+        if (errors != null) {
+            ErrorDialog(errors = errors)
         }
 
         if (isLoading) {

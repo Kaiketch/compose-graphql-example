@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.common.component.ErrorDialog
 import com.example.common.component.ProgressView
 
 
@@ -28,6 +28,7 @@ fun SearchScreen(
     val user = searchUiState.result?.data?.user
     val isLoading =
         searchUiState.result?.isLoading ?: false || searchUiState.viewerResult?.isLoading ?: false
+    val errors = searchUiState.result?.errors ?: searchUiState.viewerResult?.errors
 
     LaunchedEffect(searchViewModel) {
         searchViewModel.onResume()
@@ -88,6 +89,10 @@ fun SearchScreen(
                     Divider()
                 }
             }
+        }
+
+        if (errors != null) {
+            ErrorDialog(errors = errors)
         }
 
         if (isLoading) {
