@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.common.component.ProgressView
 
 
 @Composable
@@ -90,9 +91,7 @@ fun SearchScreen(
         }
 
         if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+            ProgressView()
         }
     }
 }
