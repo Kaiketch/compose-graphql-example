@@ -3,6 +3,7 @@ package com.example.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.example.common.Param
 import com.example.graphql.*
 import com.example.repository.GitRepoRepository
@@ -31,7 +32,7 @@ class DetailViewModel @Inject constructor(
 
     init {
         if (owner != null && name != null) {
-            gitRepoRepository.fetchRepository(owner, name)
+            gitRepoRepository.watchRepository(owner, name)
                 .onEach { result ->
                     _uiState.value = _uiState.value.copy(result = result)
                 }.catch {
@@ -54,7 +55,8 @@ class DetailViewModel @Inject constructor(
             gitRepoRepository.addStar(id).collect {
                 _uiState.value = _uiState.value.copy(addStarResult = it)
                 if (owner != null && name != null) {
-                    gitRepoRepository.reFetchRepository(owner, name).collect {}
+                    gitRepoRepository.fetchRepository(owner, name, FetchPolicy.NetworkOnly)
+                        .collect()
                 }
             }
         }
@@ -65,7 +67,8 @@ class DetailViewModel @Inject constructor(
             gitRepoRepository.removeStar(id).collect {
                 _uiState.value = _uiState.value.copy(removeStarResult = it)
                 if (owner != null && name != null) {
-                    gitRepoRepository.reFetchRepository(owner, name).collect {}
+                    gitRepoRepository.fetchRepository(owner, name, FetchPolicy.NetworkOnly)
+                        .collect()
                 }
             }
         }

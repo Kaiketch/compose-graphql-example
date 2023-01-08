@@ -41,13 +41,13 @@ class SearchViewModel @Inject constructor(
                         val login = viewerResult.data?.viewer?.login ?: return@collect
                         _uiState.value =
                             _uiState.value.copy(viewerResult = viewerResult, keyword = login)
-                        gitRepoRepository.fetchRepositories(login, limit)
+                        gitRepoRepository.watchRepositories(login, limit)
                             .collect { result ->
                                 _uiState.value = _uiState.value.copy(result = result, limit = limit)
                             }
                     }
                 } else {
-                    gitRepoRepository.fetchRepositories(_uiState.value.keyword, limit)
+                    gitRepoRepository.watchRepositories(_uiState.value.keyword, limit)
                         .collect { result ->
                             _uiState.value = _uiState.value.copy(result = result, limit = limit)
                         }
@@ -64,7 +64,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val login = _uiState.value.keyword
             val limit = settingRepository.fetchRequestLimit().first()
-            gitRepoRepository.fetchRepositories(login, limit).collect { result ->
+            gitRepoRepository.watchRepositories(login, limit).collect { result ->
                 _uiState.value = _uiState.value.copy(result = result)
             }
         }
