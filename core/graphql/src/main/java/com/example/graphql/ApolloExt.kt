@@ -19,7 +19,7 @@ fun <T : Query.Data> ApolloClient.watchAsFlow(
                 .watch().map {
                     ApolloResult.create(response = it)
                 }.catch {
-                    emit(ApolloResult.error(it))
+                    emit(ApolloResult.error(it, query))
                 }
         )
     }
@@ -36,7 +36,7 @@ fun <T : Query.Data> ApolloClient.queryAsFlow(
                 .toFlow().map {
                     ApolloResult.create(response = it)
                 }.catch {
-                    emit(ApolloResult.error(it))
+                    emit(ApolloResult.error(it, query))
                 }
         )
     }
@@ -52,7 +52,7 @@ fun <T : Mutation.Data> ApolloClient.mutationAsFlow(
                 .toFlow().map {
                     ApolloMutationResult.create(response = it)
                 }.catch {
-                    emit(ApolloMutationResult.error(it))
+                    emit(ApolloMutationResult.error(it, mutation))
                 }
         )
     }

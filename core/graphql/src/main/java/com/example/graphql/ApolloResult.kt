@@ -2,6 +2,7 @@ package com.example.graphql
 
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Mutation
+import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.api.Query
 
 data class ApolloResult<T : Query.Data>(
@@ -24,17 +25,18 @@ data class ApolloResult<T : Query.Data>(
             return ApolloResult(
                 data = response.data,
                 isLoading = false,
-                errors = response.errors?.map { Exception(it.message) },
+                errors = response.errors?.map { Exception("${response.operation.name()}: ${it.message}") },
             )
         }
 
         fun <T : Query.Data> error(
             cause: Throwable,
+            operation: Operation<T>,
         ): ApolloResult<T> {
             return ApolloResult(
                 data = null,
                 isLoading = false,
-                errors = listOf(cause),
+                errors = listOf(Exception("${operation.name()}: ${cause.message}")),
             )
         }
     }
@@ -60,17 +62,18 @@ data class ApolloMutationResult<T : Mutation.Data>(
             return ApolloMutationResult(
                 data = response.data,
                 isLoading = false,
-                errors = response.errors?.map { Exception(it.message) },
+                errors = response.errors?.map { Exception("${response.operation.name()}: ${it.message}") },
             )
         }
 
         fun <T : Mutation.Data> error(
             cause: Throwable,
+            operation: Operation<T>,
         ): ApolloMutationResult<T> {
             return ApolloMutationResult(
                 data = null,
                 isLoading = false,
-                errors = listOf(cause),
+                errors = listOf(Exception("${operation.name()}: ${cause.message}")),
             )
         }
     }
