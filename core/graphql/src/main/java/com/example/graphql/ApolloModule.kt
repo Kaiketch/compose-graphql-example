@@ -11,6 +11,7 @@ import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.normalizedCache
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.apollographql.apollo3.network.http.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +26,7 @@ class ApolloModule {
     @Provides
     fun provideApolloClient(): ApolloClient {
         return ApolloClient.Builder()
+            .addHttpInterceptor(LoggingInterceptor(LoggingInterceptor.Level.BODY))
             .serverUrl("https://api.github.com/graphql")
             .fetchPolicy(FetchPolicy.CacheFirst)
             .normalizedCache(
